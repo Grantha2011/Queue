@@ -1,0 +1,100 @@
+#include <iostream>
+using namespace std;
+
+class deque {
+  public:
+    int *arr;
+    int front;
+    int rear;
+    int size;
+
+    deque(int size) {
+      arr = new int[size];
+      front = -1;
+      rear = -1;
+      this->size = size;
+    }
+
+    void pushback(int val) {
+      // Overflow check
+      if (rear == size - 1) {
+        cout << "stack overflow" << endl;
+      } else if (rear == -1 && front == -1) {
+        rear++;
+        front++;
+        arr[rear] = val;
+      } else {
+        // Normal case
+        rear++;
+        arr[rear] = val;
+      }
+    }
+
+    void pushfront(int val) {
+      // Overflow check
+      if (front == 0) {
+        cout << "overflow" << endl;
+      } else if (front == -1 && rear == -1) {
+        front++;
+        rear++;
+        arr[front] = val;
+      } else {
+        // Normal flow
+        front--;
+        arr[front] = val;
+      }
+    }
+
+    void popfront() {
+      if (front == -1 && rear == -1) {
+        cout << "underflow" << endl;
+      } else if (front == rear) {
+        front = -1;
+        rear = -1;
+      } else {
+        arr[front] = -1; // Optional: Mark the position as "empty"
+        front++;
+      }
+    }
+
+    void popback() {
+      // Underflow check
+      if (front == -1 && rear == -1) {
+        cout << "underflow" << endl;
+      } else if (front == rear) {
+        front = -1;
+        rear = -1;
+      } else {
+        arr[rear] = -1; // Optional: Mark the position as "empty"
+        rear--;
+      }
+    }
+
+    void print() {
+      for (int i = front; i <= rear; i++) {
+        cout << arr[i] << " ";
+      }
+      cout << endl;
+    }
+};
+
+int main() {
+  deque q(5);
+  
+  q.pushback(10);
+  q.pushback(20);
+  q.pushback(30);
+
+  q.print(); // Output: 10 20 30
+
+  q.popfront();
+  q.print(); // Output: 20 30
+
+  q.pushfront(40);
+  q.print(); // Output: 40 20 30
+
+  q.popback();
+  q.print(); // Output: 40 20
+
+  return 0;
+}
