@@ -1,0 +1,48 @@
+  vector<long long> printFirstNegativeInteger(long long int A[], long long int N, long long int K) {
+    deque<long long int> q;
+    vector<long long> ans;
+
+    // Step 1: process first window
+    for (int i = 0; i < K; i++) {
+        int element = A[i];
+
+        if (element < 0) {
+            q.push_back(i);
+        }
+    }
+
+    // Store answer for the first window
+    if (q.empty()) {
+        ans.push_back(0);
+    } else {
+        int index = q.front();
+        int element = A[index];
+        ans.push_back(element);
+    }
+
+    // Process remaining windows
+    for (int i = K; i < N; i++) {
+
+        // Step B: removal of elements which are not inside current window
+        if (!q.empty() && q.front() < i - K + 1) {
+            q.pop_front();
+        }
+
+        // Step C: addition of new element
+        int element = A[i];
+        if (element < 0) {
+            q.push_back(i);
+        }
+
+        // Step A: store answer for the current window
+        if (q.empty()) {
+            ans.push_back(0);
+        } else {
+            int index = q.front();
+            int element = A[index];
+            ans.push_back(element);
+        }
+    }
+
+    return ans;
+}
