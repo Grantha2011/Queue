@@ -1,0 +1,97 @@
+#include <iostream>
+using namespace std;
+
+class kQueue {
+public:
+    int n, k, freespot;
+    int *arr, *front, *rear, *next;
+
+    // Constructor
+    kQueue(int _n, int _k) : n(_n), k(_k), freespot(0) {
+        arr = new int[n];
+        next = new int[n];
+        front = new int[k];
+        rear = new int[k];
+
+        // Initialize all queues as empty
+        for (int i = 0; i < k; i++) {
+            front[i] = rear[i] = -1;
+        }
+
+        // Initialize the free list
+        for (int i = 0; i < n - 1; i++) {
+            next[i] = i + 1;
+        }
+        next[n - 1] = -1;  // Last element points to -1
+    }
+
+    // Destructor to free allocated memory
+    ~kQueue() {
+        delete[] arr;
+        delete[] front;
+        delete[] rear;
+        delete[] next;
+    }
+
+    // Push function to add element to the queue
+    bool push(int x, int q) {
+        // Check for overflow
+        if (freespot == -1) {
+            cout << "Queue Overflow\n";
+            return false;
+        }
+
+        // Find first free index
+        int index = freespot;
+
+        // Update freespot to next free location
+        freespot = next[index];
+
+        // Check if this is the first element in the queue
+        if (front[q] == -1) {
+            front[q] = index;  // Update front
+        } else {
+            next[rear[q]] = index;  // Link new element at the end of queue
+        }
+
+        // Update next and rear pointers
+        next[index] = -1;
+        rear[q] = index;
+        
+        // Add the element to the array
+        arr[index] = x;
+
+        cout << "Pushed " << x << " to queue " << q << endl;  // Output statement for successful push
+        return true;
+    }
+    
+    // Display function to print all elements in a queue
+    void display(int q) {
+        int index = front[q];
+        if (index == -1) {
+            cout << "Queue " << q << " is empty\n";
+            return;
+        }
+        cout << "Queue " << q << " contains: ";
+        while (index != -1) {
+            cout << arr[index] << " ";
+            index = next[index];
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    kQueue q(10, 3);  // Example: 10 size array for 3 queues
+
+    q.push(15, 0);  // Push 15 to queue 0
+    q.push(25, 1);  // Push 25 to queue 1
+    q.push(35, 2);  // Push 35 to queue 2
+    q.push(45, 0);  // Push 45 to queue 0
+
+    q.display(0);  // Display queue 0
+    q.display(1);  // Display queue 1
+    q.display(2);  // Display queue 2
+
+    return 0;
+}
